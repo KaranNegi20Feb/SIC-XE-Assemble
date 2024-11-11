@@ -1,0 +1,33 @@
+COPY    START 1000
+FIRST   STL     RETADR
+        LDA     LENGTH
+        COMP    ZERO
+        JEQ     ENDFIL
+        RD      INPUT
+        STCH    BUFFER
+        JSUB    WRREC
+        J       FIRST
+ENDFIL  LDA     EOF
+        STA     BUFFER
+        LDA     THREE
+        STA     LENGTH
+        JSUB    WRREC
+        LDL     RETADR
+        RSUB
+EOF     BYTE    C'EOF'
+THREE   WORD    3
+ZERO    WORD    0
+RETADR  RESW    1
+LENGTH  RESW    1
+BUFFER  RESB    256
+INPUT   BYTE    X'F2'
+WRREC   LDA     ZERO
+WLOOP   TD      OUTPUT
+        JEQ     WLOOP
+        LDCH    BUFFER
+        WD      OUTPUT
+        TIX     LENGTH
+        JLT     WLOOP
+        RSUB
+OUTPUT  BYTE    X'06'
+        END     FIRST
